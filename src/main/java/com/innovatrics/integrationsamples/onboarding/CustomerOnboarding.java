@@ -4,6 +4,7 @@ import com.innovatrics.dot.integrationsamples.disapi.ApiClient;
 import com.innovatrics.dot.integrationsamples.disapi.ApiException;
 import com.innovatrics.dot.integrationsamples.disapi.model.*;
 import com.innovatrics.integrationsamples.Configuration;
+import com.innovatrics.integrationsamples.faceoperations.WearablesCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +99,29 @@ public class CustomerOnboarding {
             ImageCrop documentPortrait = customerOnboardingApi.documentPortrait(customerId, null, null);
             saveImage(documentPortrait.getData(), "portrait.png");
 
+            //get customers age from document
+            int customerAge = customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone();
+            //check if face mask
+            //double isWearingFaceMask = customerOnboardingApi.checkFaceMask(customerId).getScore();
+            String faceId;
+            try {
+                faceId = faceApi.detect(new CreateFaceRequest().image(new Image().url(configuration.EXAMPLE_IMAGE_URL))).getId();
+                LOG.info("Face detected with id: " + faceId);
+            } catch (ApiException exception) {
+                LOG.error("Request to server failed with code: " + exception.getCode() + " and response: " + exception.getResponseBody());
+                return;
+            }
+
+            boolean isWearingFaceMask = checkFaceMask(configuration, faceApi, faceId);
+            
+
+            // Check customers eligibility based on age and face mask status
+            if (customerAge >= 18 && !isWearingFaceMask) {
+                LOG.info("Customer is eligible");
+            } else {
+                LOG.info("Customer is not eligible");
+            }
+            
             LOG.info("Deleting customer with id: " + customerId);
             customerOnboardingApi.deleteCustomer(customerId);
         } catch (ApiException exception) {
@@ -128,5 +152,17 @@ public class CustomerOnboarding {
         if (!(resultDirectory.exists() && resultDirectory.isDirectory())) {
             resultDirectory.mkdir();
         }
+    }  
+
+        private static void checkFaceMask(Configuration configuration, FaceOperationsApi faceApi, String faceId) {
+        try {
+            FaceMaskResponse faceMaskResponse = faceApi.checkFaceMask(faceId);
+            boolean maskDetected = faceMaskResponse.getScore() > configuration.WEARABLES_FACE_MASK_THRESHOLD;
+            LOG.info("Face mask detected on face image: " + maskDetected);
+            return maskDetect;  //not sure about syntax, but need to return this boolean value
+        } catch (ApiException exception) {
+            LOG.error("Mask detection call failed. Make sure balanced or accurate detection mode is enabled");
+        }
     }
+    
 }
