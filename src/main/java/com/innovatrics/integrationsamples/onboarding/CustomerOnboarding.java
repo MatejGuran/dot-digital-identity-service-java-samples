@@ -30,6 +30,7 @@ public class CustomerOnboarding {
         final ApiClient client = new ApiClient().setBasePath(configuration.DOT_IDENTITY_SERVICE_URL);
         client.setBearerToken(configuration.DOT_AUTHENTICATION_TOKEN);
         final CustomerOnboardingApi customerOnboardingApi = new CustomerOnboardingApi(client);
+        final FaceOperationsApi faceApi = new FaceOperationsApi(client);
 
         try {
             final CreateCustomerResponse customerResponse = customerOnboardingApi.createCustomer();
