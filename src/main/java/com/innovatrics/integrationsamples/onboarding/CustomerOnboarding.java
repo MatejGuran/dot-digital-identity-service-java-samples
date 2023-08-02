@@ -160,10 +160,10 @@ public class CustomerOnboarding {
             FaceMaskResponse faceMaskResponse = faceApi.checkFaceMask(faceId);
             boolean maskDetected = faceMaskResponse.getScore() > configuration.WEARABLES_FACE_MASK_THRESHOLD;
             LOG.info("Face mask detected on face image: " + maskDetected);
-            return maskDetected;  //not sure about syntax, but need to return this boolean value
         } catch (ApiException exception) {
             LOG.error("Mask detection call failed. Make sure balanced or accurate detection mode is enabled");
         }
-    }
+        return maskDetected;  //not sure about syntax, but need to return this boolean value
+        }
     
 }
