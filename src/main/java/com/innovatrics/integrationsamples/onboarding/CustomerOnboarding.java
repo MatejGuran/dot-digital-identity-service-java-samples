@@ -101,9 +101,7 @@ public class CustomerOnboarding {
             saveImage(documentPortrait.getData(), "portrait.png");
 
             //get customers age from document
-            //int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone());
-            string AgeStr = customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone();
-            int customerAge = Integer.parseInt(AgeStr);
+            int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone()); //Need to get INT value of age from document, but not sure about syntax of this call
             
             //check if face mask
             String faceId;
