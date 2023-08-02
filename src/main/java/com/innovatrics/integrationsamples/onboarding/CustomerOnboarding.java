@@ -100,6 +100,7 @@ public class CustomerOnboarding {
             ImageCrop documentPortrait = customerOnboardingApi.documentPortrait(customerId, null, null);
             saveImage(documentPortrait.getData(), "portrait.png");
 
+            int customerAge;
             //get customers age from document
             int customerAge = customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone();
             //check if face mask
