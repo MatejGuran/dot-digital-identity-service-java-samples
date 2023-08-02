@@ -155,7 +155,7 @@ public class CustomerOnboarding {
         }
     }  
 
-        private static void checkFaceMask(Configuration configuration, FaceOperationsApi faceApi, String faceId) {
+        private static boolean checkFaceMask(Configuration configuration, FaceOperationsApi faceApi, String faceId) {
         try {
             FaceMaskResponse faceMaskResponse = faceApi.checkFaceMask(faceId);
             boolean maskDetected = faceMaskResponse.getScore() > configuration.WEARABLES_FACE_MASK_THRESHOLD;
