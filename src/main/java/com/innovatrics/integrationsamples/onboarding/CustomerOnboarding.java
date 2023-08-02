@@ -101,9 +101,11 @@ public class CustomerOnboarding {
             saveImage(documentPortrait.getData(), "portrait.png");
 
             //get customers age from document
-            int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone());
+            //int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone());
+            string AgeStr = customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone();
+            int customerAge = Integer.parseInt(AgeStr);
+            
             //check if face mask
-            //double isWearingFaceMask = customerOnboardingApi.checkFaceMask(customerId).getScore();
             String faceId;
             try {
                 faceId = faceApi.detect(new CreateFaceRequest().image(new Image().url(configuration.EXAMPLE_IMAGE_URL))).getId();
