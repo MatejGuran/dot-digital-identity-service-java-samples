@@ -101,7 +101,7 @@ public class CustomerOnboarding {
             saveImage(documentPortrait.getData(), "portrait.png");
 
             //get customers age from document
-            int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getAge().getVisualZone()); //Need to get INT value of age from document, but not sure about syntax of this call
+            int customerAge = Integer.parseInt(customerOnboardingApi.getCustomer(customerId).getCustomer().getAge().getVisualZone()); //Need to get INT value of age from document, but not sure about syntax of this call
             
             //check if face mask
             String faceId;
@@ -155,15 +155,15 @@ public class CustomerOnboarding {
         }
     }  
 
-        private static boolean checkFaceMask(Configuration configuration, FaceOperationsApi faceApi, String faceId) {
+        private static boolean checkFaceMask(Configuration configuration, FaceOperationsApi faceApi, String faceId) throws ApiException {
         try {
             FaceMaskResponse faceMaskResponse = faceApi.checkFaceMask(faceId);
             boolean maskDetected = faceMaskResponse.getScore() > configuration.WEARABLES_FACE_MASK_THRESHOLD;
             LOG.info("Face mask detected on face image: " + maskDetected);
+            return maskDetected;  //not sure about syntax, but need to return this boolean value
         } catch (ApiException exception) {
             LOG.error("Mask detection call failed. Make sure balanced or accurate detection mode is enabled");
+            throw exception;
         }
-        return maskDetected;  //not sure about syntax, but need to return this boolean value
-        }
-    
+    }
 }
